@@ -1,0 +1,11 @@
+[package]
+name = "gino-cli"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies]
+gino-shell = { path = "../gino-shell" }
+
+[lints]
+workspace = true
