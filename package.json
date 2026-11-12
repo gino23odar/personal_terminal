@@ -1,0 +1,27 @@
+{
+  "name": "gino-os",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.25.0",
+  "engines": {
+    "node": ">=24.22.1 <25"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @gino-os/web dev",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint . --max-warnings 0",
+    "typecheck": "pnpm --filter @gino-os/web typecheck",
+    "test": "pnpm --filter @gino-os/web test",
+    "build": "pnpm --filter @gino-os/web build",
+    "check:web": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
+    "check:rust": "bash scripts/check-rust.sh",
+    "check": "pnpm check:rust && pnpm check:web"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "eslint": "10.14.0",
+    "prettier": "3.9.10",
+    "typescript-eslint": "8.72.2"
+  }
+}
