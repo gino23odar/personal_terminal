@@ -1,4 +1,14 @@
-//! Portable foundation only. Shell contracts begin in PR-02.
+//! Portable shell contracts. No interpreter or platform adapter is implemented.
+
+mod cancellation;
+mod command;
+mod io;
+mod session;
+
+pub use cancellation::{CancellationToken, Cancelled};
+pub use command::{Command, CommandContext, CommandResult, ExitStatus, LocalFuture, ShellError};
+pub use io::{CommandIo, InputEvent, OutputStream, TerminalAdapter, TerminalEvent, TerminalSize};
+pub use session::{SessionSnapshot, ShellSession};
 
 /// Honest startup status shared with the native scaffold.
 pub const DEVELOPMENT_STATUS: &str =
