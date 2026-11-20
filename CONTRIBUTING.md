@@ -6,6 +6,6 @@ Follow README setup, create a focused feature branch, and run `pnpm check`. Comm
 
 Keep shell semantics in portable Rust. Do not add host-shell passthrough, host filesystem access or a second TypeScript interpreter. Add behavior tests as features arrive; keep platform I/O in adapters.
 
-PR-02 begins only after PR-01 is accepted and establishes portable session, command/context, I/O/event, cancellation and adapter contracts with native/WASM checks. It does not add the registry, parser or commands.
+PR-01 is merged. PR-02 establishes portable session, command/context, I/O/event, cancellation and adapter contracts with native/WASM checks. Review docs/SHELL_CONTRACTS.md before adding handlers or adapters. The registry, parser and commands remain later PRs.
 
 A public open-source license has not been selected by the owner; this scaffold does not grant one. Resolve licensing before inviting broad public collaboration.

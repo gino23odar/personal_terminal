@@ -1,8 +1,8 @@
-# Architecture — PR-01
+# Architecture — PR-02
 
 ## Present implementation
 
-The Cargo workspace has two crates. `gino-shell` contains only a development-status constant; `gino-cli` prints it and exits. This establishes a native dependency on the portable crate without freezing shell contracts before PR-02. No third-party Rust dependencies are needed yet.
+The Cargo workspace has two crates. `gino-shell` contains portable session, command/context, I/O/event, terminal adapter and cancellation contracts. `gino-cli` still prints the development-status constant and exits. Concrete runtime integration is deferred. No third-party Rust dependencies are needed yet.
 
 `apps/web` is a React/TypeScript/Vite page, tested with Vitest. It explicitly states that no shell is connected. Vite's built-in TSX transform is sufficient for this scaffold; React Fast Refresh can be added when needed. There is no xterm dependency or simulated terminal input yet.
 
@@ -27,7 +27,7 @@ Today `cargo build -p gino-shell --target wasm32-unknown-unknown --locked` check
 
 PR-07 will add `gino-wasm` as a `cdylib` using `wasm-bindgen`, with a pinned `wasm-pack` build pipeline targeting `web`. PR-08 will import that generated package into Vite. Generated binaries must remain uncommitted, and CI must build them before browser tests. No nonfunctional bridge crate or build script is included now.
 
-PR-02 should design asynchronous contracts around local, non-`Send` futures so browser execution does not require threads. Runtime polling and platform I/O belong to adapters. That is a design direction, not an implemented API: PR-02 must validate borrowing, cancellation and event boundaries on both native and WASM targets. Bounded streaming and backpressure arrive with PR-16.
+Commands and adapters now return boxed local futures without `Send` or `Sync` requirements. Runtime polling and platform I/O belong to adapters. Per-execution cancellation wakes local futures and can race pending I/O. Tests exercise trait-object composition with `Rc`-backed state; the same tests are compile-checked for WASM, not executed there. I/O traits specify bounded buffering and pending writes; concrete streaming channels and backpressure arrive with PR-16. See [contract semantics](SHELL_CONTRACTS.md) for mutation, error and cancellation rules.
 
 ## Toolchain policy
 
@@ -35,4 +35,4 @@ Rust 1.99.1, Node 24.22.1 and pnpm 11.25.0 are pinned to versions available in t
 
 ## Deferred work
 
-Contracts PR-02; registry PR-03; parser PR-04; commands PR-05; interactive native adapter PR-06; WASM bridge PR-07; browser terminal PR-08. VFS, portfolio content, animation, AI and deployment remain at their roadmap PRs. No release milestone is achieved by this scaffold.
+Registry PR-03; parser PR-04; commands PR-05; interactive native adapter PR-06; WASM bridge PR-07; browser terminal PR-08. VFS, portfolio content, animation, AI and deployment remain at their roadmap PRs. No release milestone is achieved by this scaffold.

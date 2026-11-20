@@ -2,7 +2,7 @@
 
 Rust-first virtual shell and interactive engineering portfolio, under development.
 
-**Current state: PR-01 scaffold.** The native executable prints a status message and exits. The browser shows a static development page. There is no command interpreter, interactive prompt, WASM bridge, virtual filesystem, portfolio data or API yet.
+**Current state: PR-02 portable contracts; CLI/web remain PR-01 scaffolds.** The native executable prints a status message and exits. The browser shows a static development page. There is no command interpreter, interactive prompt, WASM bridge, virtual filesystem, portfolio data or API yet.
 
 ## Development setup
 
@@ -30,10 +30,13 @@ cargo clippy --workspace --all-targets --locked -- -D warnings
 cargo test --workspace --locked
 cargo build --workspace --locked
 cargo build -p gino-shell --target wasm32-unknown-unknown --locked
+cargo check -p gino-shell --tests --target wasm32-unknown-unknown --locked
 pnpm check:web
 ```
 
 `pnpm check:web` runs Prettier, ESLint, TypeScript, Vitest and the production build. `pnpm check:rust` runs the listed Rust commands using Bash; `pnpm check` runs both groups. For intentional formatting changes use `cargo fmt --all` and `pnpm format`.
+
+The core now exposes session, command/context, asynchronous I/O, terminal adapter and cancellation contracts, with test-only adapters. See [contract semantics](docs/SHELL_CONTRACTS.md). These contracts do not add runnable commands.
 
 The web test checks rendered markup in Node, not an actual browser. WASM compilation checks portability only; browser execution and parity tests start when the bridge exists. CI runs the same baseline checks on pull requests and pushes to main.
 
