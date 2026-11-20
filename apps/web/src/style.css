@@ -1,0 +1,32 @@
+:root {
+  font-family: ui-monospace, "Cascadia Code", monospace;
+  color: #dae8ed;
+  background: #09121e;
+  font-synthesis: none;
+  line-height: 1.6;
+}
+body {
+  margin: 0;
+}
+main {
+  max-width: 48rem;
+  margin: 10vh auto;
+  padding: 1.5rem;
+}
+h1 {
+  color: #61e5d2;
+  font-size: clamp(2.5rem, 10vw, 4rem);
+  margin: 0;
+}
+h2 {
+  font-size: 1.2rem;
+}
+.eyebrow {
+  color: #61e5d2;
+}
+section {
+  border: 1px solid #365065;
+  padding: 1.5rem;
+  margin-top: 2rem;
+  border-radius: 0.5rem;
+}
