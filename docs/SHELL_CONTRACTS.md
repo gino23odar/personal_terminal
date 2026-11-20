@@ -46,4 +46,4 @@ Cancellation is cooperative: it cannot preempt synchronous CPU loops, roll back 
 
 `cargo test --workspace --locked` executes native behavior tests. `cargo check -p gino-shell --tests --target wasm32-unknown-unknown --locked` type-checks the same contract fixtures, including non-Send fake handlers/adapters, for WASM. It does not execute tests in a browser. Both checks are in `scripts/check-rust.sh`, so existing CI picks them up.
 
-PR-03 can consume `dyn Command` to add metadata, registration, aliases and lookup/help discovery. It must preserve these ownership and cancellation rules. The CLI will only execute commands once the later interpreter and native adapter work is implemented.
+PR-03 now consumes `dyn Command` for metadata, registration, aliases and lookup/help discovery; see [registry rules](COMMAND_REGISTRY.md). The registry preserves these ownership and cancellation rules. The CLI will only execute commands once the later interpreter and native adapter work is implemented.

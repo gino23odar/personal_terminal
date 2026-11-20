@@ -2,7 +2,7 @@
 
 Rust-first virtual shell and interactive engineering portfolio, under development.
 
-**Current state: PR-02 portable contracts; CLI/web remain PR-01 scaffolds.** The native executable prints a status message and exits. The browser shows a static development page. There is no command interpreter, interactive prompt, WASM bridge, virtual filesystem, portfolio data or API yet.
+**Current state: PR-03 command registry and portable contracts; CLI/web remain PR-01 scaffolds.** The native executable prints a status message and exits. The browser shows a static development page. There is no command interpreter, interactive prompt, WASM bridge, virtual filesystem, portfolio data or API yet.
 
 ## Development setup
 
@@ -36,7 +36,7 @@ pnpm check:web
 
 `pnpm check:web` runs Prettier, ESLint, TypeScript, Vitest and the production build. `pnpm check:rust` runs the listed Rust commands using Bash; `pnpm check` runs both groups. For intentional formatting changes use `cargo fmt --all` and `pnpm format`.
 
-The core now exposes session, command/context, asynchronous I/O, terminal adapter and cancellation contracts, with test-only adapters. See [contract semantics](docs/SHELL_CONTRACTS.md). These contracts do not add runnable commands.
+The core now exposes session, command/context, asynchronous I/O, terminal adapter and cancellation contracts, with test-only adapters. See [contract semantics](docs/SHELL_CONTRACTS.md). The [command registry](docs/COMMAND_REGISTRY.md) now provides validated registration, aliases, exact lookup and metadata-derived help. No product commands are registered yet.
 
 The web test checks rendered markup in Node, not an actual browser. WASM compilation checks portability only; browser execution and parity tests start when the bridge exists. CI runs the same baseline checks on pull requests and pushes to main.
 
