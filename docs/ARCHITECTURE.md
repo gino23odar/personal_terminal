@@ -1,8 +1,8 @@
-# Architecture — PR-03
+# Architecture — PR-04
 
 ## Present implementation
 
-The Cargo workspace has two crates. `gino-shell` contains portable session, command/context, I/O/event, terminal adapter and cancellation contracts, plus a command registry. `gino-cli` still prints the development-status constant and exits. Concrete runtime integration is deferred. No third-party Rust dependencies are needed yet.
+The Cargo workspace has two crates. `gino-shell` contains portable session, command/context, I/O/event, terminal adapter and cancellation contracts, plus a command registry and single-command parser. `gino-cli` still prints the development-status constant and exits. Concrete runtime integration is deferred. No third-party Rust dependencies are needed yet.
 
 `apps/web` is a React/TypeScript/Vite page, tested with Vitest. It explicitly states that no shell is connected. Vite's built-in TSX transform is sufficient for this scaffold; React Fast Refresh can be added when needed. There is no xterm dependency or simulated terminal input yet.
 
@@ -35,8 +35,12 @@ Rust 1.99.1, Node 24.22.1 and pnpm 11.25.0 are pinned to versions available in t
 
 ## Deferred work
 
-Parser PR-04; commands PR-05; interactive native adapter PR-06; WASM bridge PR-07; browser terminal PR-08. VFS, portfolio content, animation, AI and deployment remain at their roadmap PRs. No release milestone is achieved by this scaffold.
+Commands PR-05; interactive native adapter PR-06; WASM bridge PR-07; browser terminal PR-08. VFS, portfolio content, animation, AI and deployment remain at their roadmap PRs. No release milestone is achieved by this scaffold.
 
 ## Command registration (PR-03)
 
 `CommandRegistry` owns `Box<dyn Command>` handlers and validated metadata. Canonical entries and direct aliases use ordered maps, so discovery is deterministic without a central command switch. Names share a collision-checked namespace; a failed registration changes nothing. Lookup and help use the same immutable registered metadata. See [registry rules](COMMAND_REGISTRY.md). No runtime commands are registered in the scaffolds yet.
+
+## Parsing (PR-04)
+
+The parser is an independent, synchronous Rust module with owned words, quote provenance and UTF-8 byte spans. It returns either a complete single-command AST, blank input or a typed error. It has no registry or session dependency and performs no expansion or execution. A 64 KiB input cap bounds parsing work; unsupported composition syntax is rejected. See [grammar and error rules](SHELL_GRAMMAR.md). PR-05 will connect parsing to registry dispatch and session lifecycle.
