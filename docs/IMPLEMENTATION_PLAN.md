@@ -92,10 +92,13 @@ Use a PR template with checkboxes for scoped change, user-visible behavior, test
 ## Repository implementation status
 
 - PR-01: accepted and merged as GitHub PR #1; owner reports local verification.
-- PR-02: portable contracts implemented on the feature branch; native tests, WASM build/test compilation and web baseline checks pass locally. Hosted CI and review remain acceptance gates. Not yet accepted.
-- PR-03 through PR-36: planned, not implemented.
+- PR-02: accepted and merged as GitHub PR #2; owner reports verification.
+- PR-03: command registry implemented on feature branch; native tests, WASM build/test compilation and web checks pass locally. Hosted CI and review pending. Not yet accepted.
+- PR-04 through PR-36: planned, not implemented.
 - No V0.1, V0.5 or V1.0 release gate has been met.
 
 PR-02 prerequisites: accept PR-01 with passing baseline checks; install the pinned toolchains and WASM target; read both specification documents and architecture notes. Its scope is portable session, command/context, I/O/events, cancellation and adapter traits, verified natively and for WASM. Registry, parser, commands and runtime integrations remain later work.
 
 PR-03 prerequisites: accept PR-02 with native and WASM compile checks passing; review the contract semantics. Implement the Rust command registry, metadata, aliases, lookup and help integration with register/lookup/alias tests. Do not add the parser or interpreter ahead of their roadmap PRs.
+
+PR-04 prerequisites: accept PR-03 after verification/review; preserve the registry and command contracts. Implement Rust tokenization and a minimal AST with quotes, escapes and informative malformed-input errors. Recognize and reject unsupported operators. Do not add interpreter execution or built-ins before PR-05.
