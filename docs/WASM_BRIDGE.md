@@ -1,6 +1,6 @@
 # WASM bridge — PR-07
 
-`gino-wasm` adapts the existing `gino-shell` registry, interpreter and session to JavaScript. It contains no command implementations. The native CLI still uses the same dependency-free core. Neither adapter provides host-shell passthrough. The React page is still a scaffold; terminal UI and keyboard integration belong to PR-08.
+`gino-wasm` adapts the existing `gino-shell` registry, interpreter and session to JavaScript. It contains no command implementations. The native CLI still uses the same dependency-free core. Neither adapter provides host-shell passthrough. PR-08 now connects React/xterm to this API; see [browser terminal](BROWSER_TERMINAL.md).
 
 ## Build and verify
 
@@ -60,4 +60,4 @@ A fresh token is created for each execution. Calling `cancel()` immediately afte
 
 Output is a bounded batch, returned when execution settles: at most 256 KiB of UTF-8 bytes and 1,024 events per execution. Exceeding either limit or writing invalid UTF-8 returns an I/O failure without appending the rejected write. Existing accepted output is retained. Each write must be valid UTF-8; arbitrary fragmented binary streams are unsupported. stdin immediately returns EOF. Streaming/backpressure and pipelines remain PR-16; no streaming API is implied by the Promise.
 
-The core's 64 KiB parser input limit still applies, but JavaScript strings are copied before parsing; this is not a pre-allocation memory cap. PR-08 must also bound UI input. Output text is untrusted data, not HTML or executable terminal control. The future renderer must handle text, ANSI/control sequences and hyperlinks safely and render `clearScreen` explicitly. No DOM rendering, filesystem access, persistence, network service or portfolio data is introduced here.
+The core's 64 KiB parser input limit still applies, but JavaScript strings are copied before parsing; this is not a pre-allocation memory cap. The PR-08 UI applies a tighter 4,096-code-unit input bound. Output text is untrusted data, not HTML or executable terminal control. The PR-08 renderer neutralizes control sequences and renders `clearScreen` explicitly. No DOM rendering, filesystem access, persistence, network service or portfolio data is introduced here.
