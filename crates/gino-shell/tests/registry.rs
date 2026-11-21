@@ -88,6 +88,7 @@ fn canonical_and_alias_lookup_share_one_local_handler() {
         let result = ready(registry.get(name).unwrap().handler().execute(
             &[],
             CommandContext {
+                registry: &CommandRegistry::new(),
                 session: &mut session,
                 cancellation: &token,
             },

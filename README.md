@@ -2,7 +2,7 @@
 
 Rust-first virtual shell and interactive engineering portfolio, under development.
 
-**Current state: PR-04 parser, command registry and portable contracts; CLI/web remain PR-01 scaffolds.** The native executable prints a status message and exits. The browser shows a static development page. There is no command interpreter, interactive prompt, WASM bridge, virtual filesystem, portfolio data or API yet.
+**Current state: PR-05 interpreter and six Rust built-ins; CLI/web remain scaffolds.** The native executable prints a status message and exits. The browser shows a static development page. The Rust library executes commands through its async API. There is no interactive prompt, WASM bridge, virtual filesystem, portfolio data or API yet.
 
 ## Development setup
 
@@ -19,7 +19,7 @@ pnpm dev
 Vite prints the local development URL. No backend, environment variables, secrets or external portfolio data are needed. The CLI reports:
 
 ```text
-GINO.OS — PR-01 scaffold. Shell commands are not implemented yet.
+GINO.OS — PR-05 core ready. Interactive CLI is not connected yet.
 ```
 
 ## Verification
@@ -36,7 +36,7 @@ pnpm check:web
 
 `pnpm check:web` runs Prettier, ESLint, TypeScript, Vitest and the production build. `pnpm check:rust` runs the listed Rust commands using Bash; `pnpm check` runs both groups. For intentional formatting changes use `cargo fmt --all` and `pnpm format`.
 
-The core now exposes session, command/context, asynchronous I/O, terminal adapter and cancellation contracts, with test-only adapters. See [contract semantics](docs/SHELL_CONTRACTS.md). The [command registry](docs/COMMAND_REGISTRY.md) now provides validated registration, aliases, exact lookup and metadata-derived help. No product commands are registered yet. The [single-command parser](docs/SHELL_GRAMMAR.md) provides quoted/escaped words, a minimal AST and typed syntax errors; it does not execute input.
+The core now exposes session, command/context, asynchronous I/O, terminal adapter and cancellation contracts, with test-only adapters. See [contract semantics](docs/SHELL_CONTRACTS.md). The [command registry](docs/COMMAND_REGISTRY.md) now provides validated registration, aliases, exact lookup and metadata-derived help. `builtin_registry()` registers the six implemented [core commands](docs/COMMANDS.md). The [single-command parser](docs/SHELL_GRAMMAR.md) provides quoted/escaped words, a minimal AST and typed syntax errors; the interpreter now consumes its AST for registry dispatch.
 
 The web test checks rendered markup in Node, not an actual browser. WASM compilation checks portability only; browser execution and parity tests start when the bridge exists. CI runs the same baseline checks on pull requests and pushes to main.
 

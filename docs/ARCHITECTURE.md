@@ -1,8 +1,8 @@
-# Architecture — PR-04
+# Architecture — PR-05
 
 ## Present implementation
 
-The Cargo workspace has two crates. `gino-shell` contains portable session, command/context, I/O/event, terminal adapter and cancellation contracts, plus a command registry and single-command parser. `gino-cli` still prints the development-status constant and exits. Concrete runtime integration is deferred. No third-party Rust dependencies are needed yet.
+The Cargo workspace has two crates. `gino-shell` contains portable session, command/context, I/O/event, terminal adapter and cancellation contracts, plus a command registry, single-command parser and async interpreter with six built-ins. `gino-cli` still prints the development-status constant and exits. Concrete runtime integration is deferred. No third-party Rust dependencies are needed yet.
 
 `apps/web` is a React/TypeScript/Vite page, tested with Vitest. It explicitly states that no shell is connected. Vite's built-in TSX transform is sufficient for this scaffold; React Fast Refresh can be added when needed. There is no xterm dependency or simulated terminal input yet.
 
@@ -35,7 +35,7 @@ Rust 1.99.1, Node 24.22.1 and pnpm 11.25.0 are pinned to versions available in t
 
 ## Deferred work
 
-Commands PR-05; interactive native adapter PR-06; WASM bridge PR-07; browser terminal PR-08. VFS, portfolio content, animation, AI and deployment remain at their roadmap PRs. No release milestone is achieved by this scaffold.
+Interactive native adapter PR-06; WASM bridge PR-07; browser terminal PR-08. VFS, portfolio content, animation, AI and deployment remain at their roadmap PRs. No release milestone is achieved by this scaffold.
 
 ## Command registration (PR-03)
 
@@ -43,4 +43,8 @@ Commands PR-05; interactive native adapter PR-06; WASM bridge PR-07; browser ter
 
 ## Parsing (PR-04)
 
-The parser is an independent, synchronous Rust module with owned words, quote provenance and UTF-8 byte spans. It returns either a complete single-command AST, blank input or a typed error. It has no registry or session dependency and performs no expansion or execution. A 64 KiB input cap bounds parsing work; unsupported composition syntax is rejected. See [grammar and error rules](SHELL_GRAMMAR.md). PR-05 will connect parsing to registry dispatch and session lifecycle.
+The parser is an independent, synchronous Rust module with owned words, quote provenance and UTF-8 byte spans. It returns either a complete single-command AST, blank input or a typed error. It has no registry or session dependency and performs no expansion or execution. A 64 KiB input cap bounds parsing work; unsupported composition syntax is rejected. See [grammar and error rules](SHELL_GRAMMAR.md). PR-05 connects parsing to registry dispatch and session lifecycle.
+
+## Execution (PR-05)
+
+`execute_line` borrows a registry, mutable session, I/O and per-execution cancellation token. It parses before lookup, dispatches independent handlers, reports typed failures and records the final status. `builtin_registry` registers help, echo, pwd, whoami, clear and exit. Read-only registry access in the command context keeps help current without a duplicate catalog. Sessions can close/reset without terminating a process. See [commands and lifecycle](COMMANDS.md). No executor or concrete terminal adapter is added.

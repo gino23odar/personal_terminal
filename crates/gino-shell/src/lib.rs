@@ -1,7 +1,9 @@
-//! Portable shell contracts. No interpreter or platform adapter is implemented.
+//! Portable shell parsing, registry, interpreter and commands. Platform adapters are separate.
 
+mod builtins;
 mod cancellation;
 mod command;
+mod interpreter;
 mod io;
 mod parser;
 mod registry;
@@ -19,4 +21,7 @@ pub use session::{SessionSnapshot, ShellSession};
 
 /// Honest startup status shared with the native scaffold.
 pub const DEVELOPMENT_STATUS: &str =
-    "GINO.OS — PR-01 scaffold. Shell commands are not implemented yet.";
+    "GINO.OS — PR-05 core ready. Interactive CLI is not connected yet.";
+
+pub use builtins::builtin_registry;
+pub use interpreter::execute_line;

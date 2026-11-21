@@ -94,8 +94,9 @@ Use a PR template with checkboxes for scoped change, user-visible behavior, test
 - PR-01: accepted and merged as GitHub PR #1; owner reports local verification.
 - PR-02: accepted and merged as GitHub PR #2; owner reports verification.
 - PR-03: accepted and merged as GitHub PR #3; owner reports verification.
-- PR-04: tokenizer and single-command AST implemented on feature branch; local verification recorded in the PR. Hosted CI and review pending. Not yet accepted.
-- PR-05 through PR-36: planned, not implemented.
+- PR-04: accepted and merged as GitHub PR #4; owner reports verification and hosted CI passed.
+- PR-05: interpreter, session lifecycle and six built-ins implemented on feature branch; verification recorded in the PR. Review pending; not yet accepted.
+- PR-06 through PR-36: planned, not implemented.
 - No V0.1, V0.5 or V1.0 release gate has been met.
 
 PR-02 prerequisites: accept PR-01 with passing baseline checks; install the pinned toolchains and WASM target; read both specification documents and architecture notes. Its scope is portable session, command/context, I/O/events, cancellation and adapter traits, verified natively and for WASM. Registry, parser, commands and runtime integrations remain later work.
@@ -105,3 +106,5 @@ PR-03 prerequisites: accept PR-02 with native and WASM compile checks passing; r
 PR-04 prerequisites: accept PR-03 after verification/review; preserve the registry and command contracts. Implement Rust tokenization and a minimal AST with quotes, escapes and informative malformed-input errors. Recognize and reject unsupported operators. Do not add interpreter execution or built-ins before PR-05.
 
 PR-05 prerequisites: accept PR-04 after native tests, WASM compile checks and review; review SHELL_GRAMMAR.md, COMMAND_REGISTRY.md and SHELL_CONTRACTS.md. Connect parsing to registry execution and session lifecycle, then implement `help`, `echo`, `pwd`, `whoami`, `clear` and `exit` with stable output/exit codes. Handle blank input and syntax failures without dispatch. Interactive terminal input remains PR-06.
+
+PR-06 prerequisites: accept PR-05 with passing checks; review COMMANDS.md lifecycle and diagnostic rules. Implement a native Linux input/history and I/O adapter with Ctrl+C/D handling and clean terminal shutdown, using the shared interpreter without host-shell passthrough.

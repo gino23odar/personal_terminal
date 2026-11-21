@@ -10,6 +10,7 @@ pub struct ShellSession {
     pub environment: BTreeMap<String, String>,
     pub aliases: BTreeMap<String, String>,
     last_status: ExitStatus,
+    exit_status: Option<ExitStatus>,
 }
 
 impl Default for ShellSession {
@@ -19,11 +20,28 @@ impl Default for ShellSession {
             environment: BTreeMap::new(),
             aliases: BTreeMap::new(),
             last_status: ExitStatus::SUCCESS,
+            exit_status: None,
         }
     }
 }
 
 impl ShellSession {
+    /// None while active; Some after exit. No host process is terminated.
+    pub fn exit_status(&self) -> Option<ExitStatus> {
+        self.exit_status
+    }
+
+    pub fn close(&mut self, status: ExitStatus) {
+        if self.exit_status.is_none() {
+            self.exit_status = Some(status);
+        }
+    }
+
+    /// Start a fresh virtual session; registry and adapter resources are separate.
+    pub fn reset(&mut self) {
+        *self = Self::default();
+    }
+
     pub fn cwd(&self) -> &str {
         &self.cwd
     }
@@ -47,7 +65,7 @@ impl ShellSession {
         self.last_status
     }
 
-    /// Called by the future interpreter once an execution finishes.
+    /// Called by the interpreter once an execution finishes.
     pub fn record_status(&mut self, status: ExitStatus) {
         self.last_status = status;
     }
@@ -59,6 +77,7 @@ impl ShellSession {
             environment: self.environment.clone(),
             aliases: self.aliases.clone(),
             last_status: self.last_status,
+            exit_status: self.exit_status,
         }
     }
 }
@@ -70,4 +89,5 @@ pub struct SessionSnapshot {
     pub environment: BTreeMap<String, String>,
     pub aliases: BTreeMap<String, String>,
     pub last_status: ExitStatus,
+    pub exit_status: Option<ExitStatus>,
 }

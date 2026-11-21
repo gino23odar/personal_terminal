@@ -129,7 +129,7 @@ impl CommandRegistry {
     }
 
     /// Plain-text help for future CLI/WASM consumers; never executes handlers.
-    /// This is not the runnable `help` built-in (PR-05).
+    /// Used by the runnable `help` built-in and other discovery consumers.
     pub fn help_text(&self, name: Option<&str>) -> Result<String, RegistryError> {
         if let Some(name) = name {
             let metadata = self
