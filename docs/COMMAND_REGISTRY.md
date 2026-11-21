@@ -2,7 +2,7 @@
 
 ## Scope
 
-The registry owns metadata and handlers using the PR-02 `Command` contract. It registers, resolves and describes commands. It does not tokenize input, dispatch a parsed program, create sessions or change cancellation behavior. No built-ins are registered in the CLI or browser; the executable `help` command is planned for PR-05.
+The registry owns metadata and handlers using the PR-02 `Command` contract. It registers, resolves and describes commands. It does not tokenize input, dispatch a parsed program, create sessions or change cancellation behavior. No built-ins are registered in the CLI or browser; the library-level `help` command is now implemented in PR-05.
 
 ## Registration and names
 
@@ -36,4 +36,4 @@ Help has no separate command catalog and cannot advertise future features unless
 
 The existing full Rust script also builds the core and compile-checks all core tests for `wasm32-unknown-unknown`. These are compilation checks, not browser execution or runtime parity. Existing CLI/web scaffolds are unchanged. No new dependencies or crates are introduced.
 
-PR-04 adds the tokenizer and minimal AST, with malformed-input errors and unsupported-operator rejection. Interpreter dispatch and actual `help` execution arrive in PR-05.
+PR-04 adds the tokenizer and minimal AST, with malformed-input errors and unsupported-operator rejection. PR-05 now implements dispatch and actual `help` execution; see [command behavior](COMMANDS.md).

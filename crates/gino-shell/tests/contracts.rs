@@ -261,6 +261,7 @@ fn dynamic_handler_and_local_io_preserve_streams_events_and_session_mutation() {
     let result = ready(command.execute(
         &["diagnostic".into()],
         CommandContext {
+            registry: &CommandRegistry::new(),
             session: &mut session,
             cancellation: &token,
         },
@@ -335,6 +336,7 @@ fn io_errors_propagate_without_mutating_session_and_have_stable_exit_statuses() 
     let error = ready(Probe.execute(
         &["unused".into()],
         CommandContext {
+            registry: &CommandRegistry::new(),
             session: &mut session,
             cancellation: &token,
         },
@@ -369,6 +371,7 @@ fn cancelled_handler_does_not_emit_output_or_change_session() {
         ready(Probe.execute(
             &["unused".into()],
             CommandContext {
+                registry: &CommandRegistry::new(),
                 session: &mut session,
                 cancellation: &token
             },

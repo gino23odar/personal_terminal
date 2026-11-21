@@ -10,6 +10,6 @@ fn startup_reports_scaffold_status_and_exits_without_input() {
     assert!(output.status.success());
     assert!(output.stderr.is_empty());
     let stdout = String::from_utf8(output.stdout).expect("UTF-8 startup output");
-    assert!(stdout.contains("PR-01 scaffold"));
-    assert!(stdout.contains("Shell commands are not implemented yet."));
+    assert!(stdout.contains("PR-05 core ready"));
+    assert!(stdout.contains("Interactive CLI is not connected yet."));
 }

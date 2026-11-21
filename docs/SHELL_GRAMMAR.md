@@ -41,4 +41,4 @@ The implementation scans iteratively without recursion, external dependencies or
 
 `cargo test -p gino-shell --test parser --locked` covers valid/invalid syntax, empty words, quote provenance, operator rejection, UTF-8 spans, control input, byte limits and a deterministic 1,728-input short corpus. This is regression coverage, not exhaustive fuzzing. The existing CI also compiles the parser and its tests for WASM; it does not execute them in a browser.
 
-PR-05 should consume this AST, resolve names through `CommandRegistry`, and execute built-ins through the existing context/I/O/session contracts. It must handle blank input and syntax failures before executing anything. Pipes, redirection and expansion remain at their roadmap PRs. Interactive CLI and browser behavior are not delivered by PR-04.
+PR-05 consumes this AST, resolves names through `CommandRegistry`, and executes built-ins through the context/I/O/session contracts. It handles blank input and syntax failures before dispatch; see [execution rules](COMMANDS.md). Pipes, redirection and expansion remain at their roadmap PRs. Interactive CLI and browser behavior are not delivered by PR-04.
