@@ -1,6 +1,6 @@
 # Shell grammar — PR-04
 
-The portable Rust core exposes `tokenize(&str)` and `parse(&str)`. These functions produce syntax data only: they do not access the registry, execute commands, expand variables, mutate sessions or invoke a host shell. CLI and browser integration remain planned.
+The portable Rust core exposes `tokenize(&str)` and `parse(&str)`. These functions produce syntax data only: they do not access the registry, execute commands, expand variables, mutate sessions or invoke a host shell. The native CLI now consumes this parser through the shared interpreter; browser integration remains planned.
 
 ## Single-command syntax
 

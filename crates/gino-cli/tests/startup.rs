@@ -1,15 +1,40 @@
+#![cfg(unix)]
+
 use std::process::{Command, Stdio};
 
 #[test]
-fn startup_reports_scaffold_status_and_exits_without_input() {
-    // Launch only our compiled executable, never user input or a host shell.
+fn noninteractive_startup_fails_explicitly_without_waiting_for_input() {
     let output = Command::new(env!("CARGO_BIN_EXE_gino-cli"))
         .stdin(Stdio::null())
         .output()
         .expect("CLI should launch");
-    assert!(output.status.success());
-    assert!(output.stderr.is_empty());
-    let stdout = String::from_utf8(output.stdout).expect("UTF-8 startup output");
-    assert!(stdout.contains("PR-05 core ready"));
-    assert!(stdout.contains("Interactive CLI is not connected yet."));
+    assert_eq!(output.status.code(), Some(2));
+    assert!(output.stdout.is_empty());
+    assert!(String::from_utf8_lossy(&output.stderr).contains("interactive"));
+}
+
+#[test]
+fn arguments_are_not_treated_as_host_commands() {
+    let output = Command::new(env!("CARGO_BIN_EXE_gino-cli"))
+        .args(["-c", "echo unsafe"])
+        .output()
+        .unwrap();
+    assert_eq!(output.status.code(), Some(2));
+    assert!(output.stdout.is_empty());
+}
+
+#[cfg(target_os = "linux")]
+#[test]
+fn linux_pty_interaction_and_terminal_restoration() {
+    let output = Command::new("python3")
+        .arg(concat!(env!("CARGO_MANIFEST_DIR"), "/tests/native_pty.py"))
+        .arg(env!("CARGO_BIN_EXE_gino-cli"))
+        .output()
+        .expect("Python 3 is required for Linux PTY integration tests");
+    assert!(
+        output.status.success(),
+        "{}\n{}",
+        String::from_utf8_lossy(&output.stdout),
+        String::from_utf8_lossy(&output.stderr)
+    );
 }

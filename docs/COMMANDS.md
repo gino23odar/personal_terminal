@@ -1,6 +1,6 @@
 # Core commands — PR-05
 
-These commands execute through the portable Rust `execute_line` API and `builtin_registry()`. They are tested with in-memory I/O. The native executable and web page are still scaffolds; interactive native input starts in PR-06, the WASM bridge in PR-07 and browser terminal in PR-08.
+These commands execute through the portable Rust `execute_line` API and `builtin_registry()`. They are available in the [PR-06 native CLI](NATIVE_CLI.md) and tested with in-memory I/O. The web page is still a scaffold; the WASM bridge arrives in PR-07 and browser terminal in PR-08.
 
 | Command                | Behavior                                                                                                                                             |
 | ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -22,15 +22,13 @@ Examples through the Rust API:
 | `pwd`                   | `/home/visitor` followed by newline in a new session, status 0 |
 | `echo -n`               | Usage diagnostic on stderr, status 2                           |
 | `missing`               | Command-not-found diagnostic on stderr, status 127             |
-| `echo hello \| world`   | `hello                                                         | world` followed by newline, status 0                        |
-| `echo hello             | other`                                                         | Syntax diagnostic on stderr, status 2; neither command runs |
 | `exit 7`                | No output, status 7; session closes                            |
 
 ## Execution and lifecycle contract
 
 Call `execute_line(input, &registry, &mut session, &mut io, &token).await` with one logical line without its terminator. Create a fresh `CancellationToken` per call. The adapter owns polling and interrupt delivery. A mutable session borrow serializes execution; different sessions can share an immutable registry. No host shell fallback exists. Commands are independent `Command` handlers, not an interpreter switch. `CommandContext` now includes a read-only registry for discovery.
 
-A new session is active, starts at `/home/visitor`, and has empty environment/alias maps and status 0. Blank input emits nothing and preserves status. Completed execution records its success or error status. Closing is idempotent; calls on a closed session return its exit status without parsing, I/O or cancellation checks. `reset()` restores the default session state and clears maps/status/exit state, without changing registry or adapter resources. Snapshots include the exit state. History and persistence remain deferred.
+A new session is active, starts at `/home/visitor`, and has empty environment/alias maps and status 0. Blank input emits nothing and preserves status. Completed execution records its success or error status. Closing is idempotent; calls on a closed session return its exit status without parsing, I/O or cancellation checks. `reset()` restores the default session state and clears maps/status/exit state, without changing registry or adapter resources. Snapshots include the exit state. The core does not store history; PR-06 owns bounded, session-only native history. Persistence remains deferred.
 
 | Result                                         | Status                          |
 | ---------------------------------------------- | ------------------------------- |

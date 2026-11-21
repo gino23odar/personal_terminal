@@ -2,7 +2,7 @@
 
 ## Scope
 
-The registry owns metadata and handlers using the PR-02 `Command` contract. It registers, resolves and describes commands. It does not tokenize input, dispatch a parsed program, create sessions or change cancellation behavior. No built-ins are registered in the CLI or browser; the library-level `help` command is now implemented in PR-05.
+The registry owns metadata and handlers using the PR-02 `Command` contract. It registers, resolves and describes commands. It does not tokenize input, dispatch a parsed program, create sessions or change cancellation behavior. The PR-06 CLI registers the six built-ins, including the metadata-driven `help` command; the browser is not connected yet.
 
 ## Registration and names
 
@@ -34,6 +34,6 @@ Help has no separate command catalog and cannot advertise future features unless
 
 `cargo test -p gino-shell --test registry --locked` tests registrations, collisions, atomic rejection, invalid metadata, deterministic discovery/help, exact lookup, alias identity, session-alias separation and invocation of a test-only non-Send handler retrieved from the registry.
 
-The existing full Rust script also builds the core and compile-checks all core tests for `wasm32-unknown-unknown`. These are compilation checks, not browser execution or runtime parity. Existing CLI/web scaffolds are unchanged. No new dependencies or crates are introduced.
+The existing full Rust script also builds the core and compile-checks all core tests for `wasm32-unknown-unknown`. These are compilation checks, not browser execution or runtime parity. PR-03 originally left CLI/web scaffolds unchanged; native integration is now documented in NATIVE_CLI.md. No new dependencies or crates are introduced.
 
 PR-04 adds the tokenizer and minimal AST, with malformed-input errors and unsupported-operator rejection. PR-05 now implements dispatch and actual `help` execution; see [command behavior](COMMANDS.md).

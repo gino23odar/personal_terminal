@@ -19,9 +19,5 @@ pub use parser::{
 pub use registry::{CommandMetadata, CommandRegistry, RegisteredCommand, RegistryError};
 pub use session::{SessionSnapshot, ShellSession};
 
-/// Honest startup status shared with the native scaffold.
-pub const DEVELOPMENT_STATUS: &str =
-    "GINO.OS — PR-05 core ready. Interactive CLI is not connected yet.";
-
 pub use builtins::builtin_registry;
 pub use interpreter::execute_line;
