@@ -1,0 +1,639 @@
+[
+  {
+    "name": "adapter-smoke",
+    "smoke": true,
+    "steps": [
+      {
+        "input": "help",
+        "expected": {
+          "status": 0,
+          "events": [
+            {
+              "type": "stdout",
+              "text": "Available commands:\n  clear — Request a clear screen\n  echo — Print arguments as literal text\n  exit — Close the virtual session\n  help — List commands or describe one command\n  pwd — Print the virtual working directory\n  whoami — Print the virtual user\n"
+            }
+          ],
+          "error": null,
+          "session": {
+            "cwd": "/home/visitor",
+            "lastStatus": 0,
+            "exitStatus": null
+          }
+        }
+      },
+      {
+        "input": "help echo",
+        "expected": {
+          "status": 0,
+          "events": [
+            {
+              "type": "stdout",
+              "text": "echo — Print arguments as literal text\nUsage: echo [--] [text ...]\n"
+            }
+          ],
+          "error": null,
+          "session": {
+            "cwd": "/home/visitor",
+            "lastStatus": 0,
+            "exitStatus": null
+          }
+        }
+      },
+      {
+        "input": "pwd",
+        "expected": {
+          "status": 0,
+          "events": [
+            {
+              "type": "stdout",
+              "text": "/home/visitor\n"
+            }
+          ],
+          "error": null,
+          "session": {
+            "cwd": "/home/visitor",
+            "lastStatus": 0,
+            "exitStatus": null
+          }
+        }
+      },
+      {
+        "input": "whoami",
+        "expected": {
+          "status": 0,
+          "events": [
+            {
+              "type": "stdout",
+              "text": "visitor\n"
+            }
+          ],
+          "error": null,
+          "session": {
+            "cwd": "/home/visitor",
+            "lastStatus": 0,
+            "exitStatus": null
+          }
+        }
+      },
+      {
+        "input": "echo \"hello 🦀\"",
+        "expected": {
+          "status": 0,
+          "events": [
+            {
+              "type": "stdout",
+              "text": "hello 🦀\n"
+            }
+          ],
+          "error": null,
+          "session": {
+            "cwd": "/home/visitor",
+            "lastStatus": 0,
+            "exitStatus": null
+          }
+        }
+      },
+      {
+        "input": "missing",
+        "expected": {
+          "status": 127,
+          "events": [
+            {
+              "type": "stderr",
+              "text": "gino: command not found: \\\"missing\\\"\n"
+            }
+          ],
+          "error": {
+            "kind": "unknownCommand",
+            "message": "command not found: \"missing\"",
+            "span": null
+          },
+          "session": {
+            "cwd": "/home/visitor",
+            "lastStatus": 127,
+            "exitStatus": null
+          }
+        }
+      },
+      {
+        "input": "echo é | whoami",
+        "expected": {
+          "status": 2,
+          "events": [
+            {
+              "type": "stderr",
+              "text": "gino: parse error at bytes 8..9: syntax \\\"|\\\" is not supported yet\n"
+            }
+          ],
+          "error": {
+            "kind": "syntax",
+            "message": "parse error at bytes 8..9: syntax \"|\" is not supported yet",
+            "span": [8, 9]
+          },
+          "session": {
+            "cwd": "/home/visitor",
+            "lastStatus": 2,
+            "exitStatus": null
+          }
+        }
+      },
+      {
+        "input": "echo recovered",
+        "expected": {
+          "status": 0,
+          "events": [
+            {
+              "type": "stdout",
+              "text": "recovered\n"
+            }
+          ],
+          "error": null,
+          "session": {
+            "cwd": "/home/visitor",
+            "lastStatus": 0,
+            "exitStatus": null
+          }
+        }
+      },
+      {
+        "input": "clear",
+        "expected": {
+          "status": 0,
+          "events": [
+            {
+              "type": "clearScreen"
+            }
+          ],
+          "error": null,
+          "session": {
+            "cwd": "/home/visitor",
+            "lastStatus": 0,
+            "exitStatus": null
+          }
+        }
+      },
+      {
+        "input": "exit 7",
+        "expected": {
+          "status": 7,
+          "events": [],
+          "error": null,
+          "session": {
+            "cwd": "/home/visitor",
+            "lastStatus": 7,
+            "exitStatus": 7
+          }
+        }
+      }
+    ]
+  },
+  {
+    "name": "quoting-and-literals",
+    "steps": [
+      {
+        "input": "echo",
+        "expected": {
+          "status": 0,
+          "events": [
+            {
+              "type": "stdout",
+              "text": "\n"
+            }
+          ],
+          "error": null,
+          "session": {
+            "cwd": "/home/visitor",
+            "lastStatus": 0,
+            "exitStatus": null
+          }
+        }
+      },
+      {
+        "input": "echo 'two words' '' 🦀",
+        "expected": {
+          "status": 0,
+          "events": [
+            {
+              "type": "stdout",
+              "text": "two words  🦀\n"
+            }
+          ],
+          "error": null,
+          "session": {
+            "cwd": "/home/visitor",
+            "lastStatus": 0,
+            "exitStatus": null
+          }
+        }
+      },
+      {
+        "input": "echo one\\ two \"a\\\"b\"",
+        "expected": {
+          "status": 0,
+          "events": [
+            {
+              "type": "stdout",
+              "text": "one two a\"b\n"
+            }
+          ],
+          "error": null,
+          "session": {
+            "cwd": "/home/visitor",
+            "lastStatus": 0,
+            "exitStatus": null
+          }
+        }
+      },
+      {
+        "input": "echo \"$HOME\" ~ \"\\n\"",
+        "expected": {
+          "status": 0,
+          "events": [
+            {
+              "type": "stdout",
+              "text": "$HOME ~ \\n\n"
+            }
+          ],
+          "error": null,
+          "session": {
+            "cwd": "/home/visitor",
+            "lastStatus": 0,
+            "exitStatus": null
+          }
+        }
+      },
+      {
+        "input": "echo -- -n",
+        "expected": {
+          "status": 0,
+          "events": [
+            {
+              "type": "stdout",
+              "text": "-n\n"
+            }
+          ],
+          "error": null,
+          "session": {
+            "cwd": "/home/visitor",
+            "lastStatus": 0,
+            "exitStatus": null
+          }
+        }
+      },
+      {
+        "input": "echo 'a|b' '<html>'",
+        "expected": {
+          "status": 0,
+          "events": [
+            {
+              "type": "stdout",
+              "text": "a|b <html>\n"
+            }
+          ],
+          "error": null,
+          "session": {
+            "cwd": "/home/visitor",
+            "lastStatus": 0,
+            "exitStatus": null
+          }
+        }
+      }
+    ]
+  },
+  {
+    "name": "errors-and-status",
+    "steps": [
+      {
+        "input": "echo -n",
+        "expected": {
+          "status": 2,
+          "events": [
+            {
+              "type": "stderr",
+              "text": "gino: invalid input: usage: echo [--] [text ...] (options are not supported)\n"
+            }
+          ],
+          "error": {
+            "kind": "invalidInput",
+            "message": "invalid input: usage: echo [--] [text ...] (options are not supported)",
+            "span": null
+          },
+          "session": {
+            "cwd": "/home/visitor",
+            "lastStatus": 2,
+            "exitStatus": null
+          }
+        }
+      },
+      {
+        "input": " \t",
+        "expected": {
+          "status": 2,
+          "events": [],
+          "error": null,
+          "session": {
+            "cwd": "/home/visitor",
+            "lastStatus": 2,
+            "exitStatus": null
+          }
+        }
+      },
+      {
+        "input": "exit 256",
+        "expected": {
+          "status": 2,
+          "events": [
+            {
+              "type": "stderr",
+              "text": "gino: invalid input: usage: exit [status: 0..255]\n"
+            }
+          ],
+          "error": {
+            "kind": "invalidInput",
+            "message": "invalid input: usage: exit [status: 0..255]",
+            "span": null
+          },
+          "session": {
+            "cwd": "/home/visitor",
+            "lastStatus": 2,
+            "exitStatus": null
+          }
+        }
+      },
+      {
+        "input": "echo \"broken",
+        "expected": {
+          "status": 2,
+          "events": [
+            {
+              "type": "stderr",
+              "text": "gino: parse error at bytes 5..6: unclosed \\'\\\"\\' quote\n"
+            }
+          ],
+          "error": {
+            "kind": "syntax",
+            "message": "parse error at bytes 5..6: unclosed '\"' quote",
+            "span": [5, 6]
+          },
+          "session": {
+            "cwd": "/home/visitor",
+            "lastStatus": 2,
+            "exitStatus": null
+          }
+        }
+      },
+      {
+        "input": "/bin/sh",
+        "expected": {
+          "status": 127,
+          "events": [
+            {
+              "type": "stderr",
+              "text": "gino: command not found: \\\"/bin/sh\\\"\n"
+            }
+          ],
+          "error": {
+            "kind": "unknownCommand",
+            "message": "command not found: \"/bin/sh\"",
+            "span": null
+          },
+          "session": {
+            "cwd": "/home/visitor",
+            "lastStatus": 127,
+            "exitStatus": null
+          }
+        }
+      },
+      {
+        "input": "exit",
+        "expected": {
+          "status": 127,
+          "events": [],
+          "error": null,
+          "session": {
+            "cwd": "/home/visitor",
+            "lastStatus": 127,
+            "exitStatus": 127
+          }
+        }
+      },
+      {
+        "input": "echo \"ignored",
+        "expected": {
+          "status": 127,
+          "events": [],
+          "error": null,
+          "session": {
+            "cwd": "/home/visitor",
+            "lastStatus": 127,
+            "exitStatus": 127
+          }
+        }
+      },
+      {
+        "reset": true,
+        "expected": {
+          "session": {
+            "cwd": "/home/visitor",
+            "lastStatus": 0,
+            "exitStatus": null
+          }
+        }
+      },
+      {
+        "input": "echo reset",
+        "expected": {
+          "status": 0,
+          "events": [
+            {
+              "type": "stdout",
+              "text": "reset\n"
+            }
+          ],
+          "error": null,
+          "session": {
+            "cwd": "/home/visitor",
+            "lastStatus": 0,
+            "exitStatus": null
+          }
+        }
+      }
+    ]
+  },
+  {
+    "name": "cancellation-and-closed-session",
+    "steps": [
+      {
+        "input": "exit 9",
+        "expected": {
+          "status": 130,
+          "events": [],
+          "error": {
+            "kind": "cancelled",
+            "message": "execution cancelled",
+            "span": null
+          },
+          "session": {
+            "cwd": "/home/visitor",
+            "lastStatus": 130,
+            "exitStatus": null
+          }
+        },
+        "cancel": true
+      },
+      {
+        "input": "echo fresh token",
+        "expected": {
+          "status": 0,
+          "events": [
+            {
+              "type": "stdout",
+              "text": "fresh token\n"
+            }
+          ],
+          "error": null,
+          "session": {
+            "cwd": "/home/visitor",
+            "lastStatus": 0,
+            "exitStatus": null
+          }
+        }
+      },
+      {
+        "input": "clear",
+        "expected": {
+          "status": 130,
+          "events": [],
+          "error": {
+            "kind": "cancelled",
+            "message": "execution cancelled",
+            "span": null
+          },
+          "session": {
+            "cwd": "/home/visitor",
+            "lastStatus": 130,
+            "exitStatus": null
+          }
+        },
+        "cancel": true
+      },
+      {
+        "input": "exit",
+        "expected": {
+          "status": 130,
+          "events": [],
+          "error": null,
+          "session": {
+            "cwd": "/home/visitor",
+            "lastStatus": 130,
+            "exitStatus": 130
+          }
+        }
+      },
+      {
+        "input": "missing",
+        "expected": {
+          "status": 130,
+          "events": [],
+          "error": null,
+          "session": {
+            "cwd": "/home/visitor",
+            "lastStatus": 130,
+            "exitStatus": 130
+          }
+        },
+        "cancel": true
+      }
+    ]
+  },
+  {
+    "name": "input-boundaries",
+    "steps": [
+      {
+        "input": "echo first\necho second",
+        "expected": {
+          "status": 2,
+          "events": [
+            {
+              "type": "stderr",
+              "text": "gino: parse error at bytes 10..11: syntax \\\"newline\\\" is not supported yet\n"
+            }
+          ],
+          "error": {
+            "kind": "syntax",
+            "message": "parse error at bytes 10..11: syntax \"newline\" is not supported yet",
+            "span": [10, 11]
+          },
+          "session": {
+            "cwd": "/home/visitor",
+            "lastStatus": 2,
+            "exitStatus": null
+          }
+        }
+      },
+      {
+        "input": "echo \u001b[2J",
+        "expected": {
+          "status": 2,
+          "events": [
+            {
+              "type": "stderr",
+              "text": "gino: parse error at bytes 5..6: control character \\'\\\\u{1b}\\' is not allowed\n"
+            }
+          ],
+          "error": {
+            "kind": "syntax",
+            "message": "parse error at bytes 5..6: control character '\\u{1b}' is not allowed",
+            "span": [5, 6]
+          },
+          "session": {
+            "cwd": "/home/visitor",
+            "lastStatus": 2,
+            "exitStatus": null
+          }
+        }
+      },
+      {
+        "repeat": "a",
+        "count": 65537,
+        "expected": {
+          "status": 2,
+          "events": [
+            {
+              "type": "stderr",
+              "text": "gino: parse error at bytes 0..65537: input exceeds 65536 bytes\n"
+            }
+          ],
+          "error": {
+            "kind": "syntax",
+            "message": "parse error at bytes 0..65537: input exceeds 65536 bytes",
+            "span": [0, 65537]
+          },
+          "session": {
+            "cwd": "/home/visitor",
+            "lastStatus": 2,
+            "exitStatus": null
+          }
+        }
+      },
+      {
+        "input": "pwd",
+        "expected": {
+          "status": 0,
+          "events": [
+            {
+              "type": "stdout",
+              "text": "/home/visitor\n"
+            }
+          ],
+          "error": null,
+          "session": {
+            "cwd": "/home/visitor",
+            "lastStatus": 0,
+            "exitStatus": null
+          }
+        }
+      }
+    ]
+  }
+]

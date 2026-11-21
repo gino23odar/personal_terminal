@@ -2,6 +2,7 @@ import { URL } from "node:url";
 import { createServer } from "node:http";
 import { readFile } from "node:fs/promises";
 const routes = new Map([
+  ["/parity-runner.mjs", ["../parity/runner.mjs", "text/javascript"]],
   [
     "/pkg/gino_wasm.js",
     ["../../crates/gino-wasm/pkg/gino_wasm.js", "text/javascript"],

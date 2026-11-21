@@ -125,3 +125,27 @@ try:
 finally:
     t.close()
 print("PTY checks passed: commands, editing, history, Ctrl+C/D, resize, exit status and termios restoration")
+
+# PR-09: the identical reviewed scenario also runs in the production browser.
+# A PTY combines stdout/stderr; engine parity tests check their distinction.
+import json
+from pathlib import Path
+fixtures = json.loads((Path(__file__).resolve().parents[3] / "tests/parity/fixtures.json").read_text())
+for scenario in (fixture for fixture in fixtures if fixture.get("smoke")):
+    t = Terminal()
+    try:
+        for step in scenario["steps"]:
+            expected = step["expected"]
+            if expected["session"]["exitStatus"] is not None:
+                t.finish(step["input"].encode() + b"\r", expected["status"])
+                break
+            output = t.command(step["input"].encode())
+            if any(event["type"] == "clearScreen" for event in expected["events"]):
+                assert b"\x1b[2J\x1b[H" in output, output
+            else:
+                actual = ANSI.sub(b"", output).removesuffix(PROMPT).replace(b"\r", b"").strip(b"\n")
+                text = "".join(event["text"] for event in expected["events"]).encode().strip(b"\n")
+                assert actual == text, (scenario["name"], step["input"], actual, text)
+    finally:
+        t.close()
+print("Shared parity fixture smoke passed through native CLI PTY")

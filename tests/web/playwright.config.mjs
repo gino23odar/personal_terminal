@@ -3,7 +3,7 @@ import { URL } from "node:url";
 import process from "node:process";
 export default defineConfig({
   testDir: ".",
-  testMatch: "terminal.spec.mjs",
+  testMatch: "*.spec.mjs",
   timeout: 20000,
   use: {
     baseURL: "http://127.0.0.1:4180",

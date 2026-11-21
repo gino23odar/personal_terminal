@@ -1,4 +1,4 @@
-# Architecture — PR-08
+# Architecture — PR-09
 
 ## Present implementation
 
@@ -35,7 +35,7 @@ Rust 1.99.1, Node 24.22.1 and pnpm 11.25.0 are pinned to versions available in t
 
 ## Deferred work
 
-Parity and V0.1 audit PR-09. VFS, portfolio content, animation, AI and deployment remain at their roadmap PRs. No release milestone is achieved by this scaffold.
+V0.1 acceptance is pending PR-09 review; see [audit evidence](V0_1_AUDIT.md). VFS, portfolio content, animation, AI and deployment remain at their roadmap PRs. No release milestone is achieved by this scaffold.
 
 ## Command registration (PR-03)
 
@@ -52,3 +52,7 @@ The parser is an independent, synchronous Rust module with owned words, quote pr
 ## Native presentation (PR-06)
 
 Rustyline owns line editing and raw-mode cleanup. The native loop supplies a fresh token for each execution, bridges SIGINT into local cancellation, and routes stdout/stderr and structured clear events through a bounded handoff. It never dispatches host processes. The key-event adapter trait is not forced around a blocking line editor. See [native decisions, verification and limits](NATIVE_CLI.md).
+
+## Runtime parity (PR-09)
+
+A test-only native example and the real WASM module consume one reviewed JSON fixture file. Node compares exact outcomes and generates a fresh native baseline; Chromium compares browser WASM against that baseline and the fixture. CLI PTY and production UI smoke tests consume the same adapter scenario. The JSON dependency is dev-only; no production command or interpreter changes are needed. See [audit and boundaries](V0_1_AUDIT.md).

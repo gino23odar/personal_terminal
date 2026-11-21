@@ -53,3 +53,7 @@ jobs:
       - run: pnpm exec playwright install --with-deps chromium
       - name: Build WASM and test generated JS in Node and Chromium
         run: pnpm check:wasm
+      - name: Compare native Rust and WASM against shared fixtures
+        run: |
+          pnpm test:parity:node
+          pnpm test:parity:browser

@@ -1,6 +1,6 @@
 # Core commands — PR-05
 
-These commands execute through the portable Rust `execute_line` API and `builtin_registry()`. They are available in the [PR-06 native CLI](NATIVE_CLI.md) and tested with in-memory I/O. The web page is still a scaffold; the WASM bridge arrives in PR-07 and browser terminal in PR-08.
+These commands execute through the portable Rust `execute_line` API and `builtin_registry()`. They are available in the [PR-06 native CLI](NATIVE_CLI.md) and tested with in-memory I/O. They also execute through the [WASM bridge](WASM_BRIDGE.md) and [browser terminal](BROWSER_TERMINAL.md).
 
 | Command                | Behavior                                                                                                                                             |
 | ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -44,8 +44,8 @@ The interpreter writes one `gino: ...` diagnostic line to stderr for syntax, loo
 
 Cancellation races parsing, dispatch and diagnostic delivery as one async operation. Before the first poll it prevents execution entirely; while awaiting I/O it drops pending work. Synchronous code is cooperative and cannot be preempted. Partial output or session mutations are not rolled back. Directly dropping the execution future is not a completed execution and does not record a final status; adapters should cancel and poll to completion. No runtime, thread or external dependency is added.
 
-## Verification and PR-06 handoff
+## Verification and runtime audit
 
 Run `cargo test -p gino-shell --test interpreter --locked`, or `pnpm check` for the complete baseline. Tests cover registry extensions and aliases, all built-ins, status/diagnostic behavior, malformed input without dispatch, session isolation/reset, unsupported controls, transport failure and cancellation while output is pending. WASM checks compile these tests but do not run them in a browser.
 
-PR-06 requires PR-05 acceptance and passing checks. It should add native input/history, polling and I/O adapters, Ctrl+C/D handling, lifecycle-driven shutdown and terminal cleanup. It must preserve this core behavior and keep host commands disabled. Pipes, redirects, expansion, VFS and browser execution remain at their roadmap PRs.
+Native and browser adapters are implemented. PR-09 adds shared expected fixtures and exact native/WASM comparisons; see [V0.1 audit](V0_1_AUDIT.md). Pipes, redirects, expansion and VFS remain at their roadmap PRs.
