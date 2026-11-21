@@ -2,7 +2,7 @@
 
 Rust-first virtual shell and interactive engineering portfolio, under development.
 
-**Current state: PR-05 interpreter and six Rust built-ins; CLI/web remain scaffolds.** The native executable prints a status message and exits. The browser shows a static development page. The Rust library executes commands through its async API. There is no interactive prompt, WASM bridge, virtual filesystem, portfolio data or API yet.
+**Current state: PR-06 interactive native CLI with six shared Rust commands.** Run it in a Linux terminal to use `help`, `echo`, `pwd`, `whoami`, `clear` and `exit`. Input editing, in-memory history and Ctrl+C/D are implemented. The browser remains a static development page; WASM binding, VFS, portfolio data and API are still planned.
 
 ## Development setup
 
@@ -16,11 +16,15 @@ cargo run -p gino-cli --locked
 pnpm dev
 ```
 
-Vite prints the local development URL. No backend, environment variables, secrets or external portfolio data are needed. The CLI reports:
+Vite prints the local browser development URL; that page is still a scaffold. The native CLI runs directly in your terminal, without a browser or backend. It starts with:
 
 ```text
-GINO.OS — PR-05 core ready. Interactive CLI is not connected yet.
+GINO.OS — native virtual shell
+Type 'help' for available commands.
+visitor@gino.os:~$
 ```
+
+See [native input, history, shutdown and limitations](docs/NATIVE_CLI.md). Python 3 is required for Linux PTY tests, not for running the CLI. No environment secrets or external portfolio data are needed.
 
 ## Verification
 
@@ -36,7 +40,7 @@ pnpm check:web
 
 `pnpm check:web` runs Prettier, ESLint, TypeScript, Vitest and the production build. `pnpm check:rust` runs the listed Rust commands using Bash; `pnpm check` runs both groups. For intentional formatting changes use `cargo fmt --all` and `pnpm format`.
 
-The core now exposes session, command/context, asynchronous I/O, terminal adapter and cancellation contracts, with test-only adapters. See [contract semantics](docs/SHELL_CONTRACTS.md). The [command registry](docs/COMMAND_REGISTRY.md) now provides validated registration, aliases, exact lookup and metadata-derived help. `builtin_registry()` registers the six implemented [core commands](docs/COMMANDS.md). The [single-command parser](docs/SHELL_GRAMMAR.md) provides quoted/escaped words, a minimal AST and typed syntax errors; the interpreter now consumes its AST for registry dispatch.
+The core now exposes session, command/context, asynchronous I/O, terminal adapter and cancellation contracts, with a native CLI adapter and test fixtures. See [contract semantics](docs/SHELL_CONTRACTS.md). The [command registry](docs/COMMAND_REGISTRY.md) now provides validated registration, aliases, exact lookup and metadata-derived help. `builtin_registry()` registers the six implemented [core commands](docs/COMMANDS.md). The [single-command parser](docs/SHELL_GRAMMAR.md) provides quoted/escaped words, a minimal AST and typed syntax errors; the interpreter now consumes its AST for registry dispatch.
 
 The web test checks rendered markup in Node, not an actual browser. WASM compilation checks portability only; browser execution and parity tests start when the bridge exists. CI runs the same baseline checks on pull requests and pushes to main.
 

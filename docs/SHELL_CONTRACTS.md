@@ -51,3 +51,7 @@ PR-03 now consumes `dyn Command` for metadata, registration, aliases and lookup/
 ## PR-05 integration update
 
 The historical PR-02 scope above describes the original contracts. PR-05 adds read-only registry access to CommandContext, typed syntax/unknown-command errors (statuses 2/127), and session close/reset/exit snapshots. The interpreter now owns dispatch, error reporting, final status recording and cancellation orchestration. See [current execution rules](COMMANDS.md). Concrete adapters and history remain deferred.
+
+## PR-06 integration update
+
+The native CLI now supplies line editing, local future polling, cancellation forwarding and bounded CommandIo delivery. See [native adapter semantics and limits](NATIVE_CLI.md). Native history is session-only; browser adapters and persistence remain deferred.
