@@ -96,8 +96,9 @@ Use a PR template with checkboxes for scoped change, user-visible behavior, test
 - PR-03: accepted and merged as GitHub PR #3; owner reports verification.
 - PR-04: accepted and merged as GitHub PR #4; owner reports verification and hosted CI passed.
 - PR-05: accepted and merged as GitHub PR #5; owner reports verification and hosted CI passed.
-- PR-06: native interactive CLI implemented on feature branch; verification recorded in the PR. Review pending; not yet accepted.
-- PR-07 through PR-36: planned, not implemented.
+- PR-06: accepted and merged as GitHub PR #6; owner reports verification and hosted CI passed.
+- PR-07: WASM bridge implemented on feature branch; verification recorded in the PR. Review pending; not yet accepted.
+- PR-08 through PR-36: planned, not implemented.
 - No V0.1, V0.5 or V1.0 release gate has been met.
 
 PR-02 prerequisites: accept PR-01 with passing baseline checks; install the pinned toolchains and WASM target; read both specification documents and architecture notes. Its scope is portable session, command/context, I/O/events, cancellation and adapter traits, verified natively and for WASM. Registry, parser, commands and runtime integrations remain later work.
@@ -111,3 +112,5 @@ PR-05 prerequisites: accept PR-04 after native tests, WASM compile checks and re
 PR-06 prerequisites: accept PR-05 with passing checks; review COMMANDS.md lifecycle and diagnostic rules. Implement a native Linux input/history and I/O adapter with Ctrl+C/D handling and clean terminal shutdown, using the shared interpreter without host-shell passthrough.
 
 PR-07 prerequisites: accept PR-06 with native/PTY and core WASM checks passing. Add the WASM adapter/bridge over the shared interpreter, with JS-facing execution tests. Keep native dependencies out of WASM and browser UI work in PR-08.
+
+PR-08 prerequisites: accept PR-07 after native, web, generated TypeScript and Node/Chromium WASM checks pass. Review WASM_BRIDGE.md, build the generated web package, then connect React/Vite/xterm.js with keyboard handling and safe output rendering. Keep shell semantics in Rust and preserve busy/cancellation/session behavior. V0.1 acceptance remains PR-09.
