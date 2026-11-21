@@ -2,7 +2,7 @@
 
 Rust-first virtual shell and interactive engineering portfolio, under development.
 
-**Current state: PR-06 interactive native CLI with six shared Rust commands.** Run it in a Linux terminal to use `help`, `echo`, `pwd`, `whoami`, `clear` and `exit`. Input editing, in-memory history and Ctrl+C/D are implemented. The browser remains a static development page; WASM binding, VFS, portfolio data and API are still planned.
+**Current state: PR-07 WASM bridge and interactive native CLI with six shared Rust commands.** Run it in a Linux terminal to use `help`, `echo`, `pwd`, `whoami`, `clear` and `exit`. Input editing, in-memory history and Ctrl+C/D are implemented. The browser remains a static development page; the bridge is tested independently in Node and Chromium. Browser terminal integration, VFS, portfolio data and API are still planned.
 
 ## Development setup
 
@@ -36,13 +36,16 @@ cargo build --workspace --locked
 cargo build -p gino-shell --target wasm32-unknown-unknown --locked
 cargo check -p gino-shell --tests --target wasm32-unknown-unknown --locked
 pnpm check:web
+pnpm check:wasm
 ```
 
-`pnpm check:web` runs Prettier, ESLint, TypeScript, Vitest and the production build. `pnpm check:rust` runs the listed Rust commands using Bash; `pnpm check` runs both groups. For intentional formatting changes use `cargo fmt --all` and `pnpm format`.
+`pnpm check:web` runs Prettier, ESLint, TypeScript, Vitest and the production build. `pnpm check:rust` runs the listed Rust commands using Bash; `pnpm check` runs Rust, web and WASM groups. For intentional formatting changes use `cargo fmt --all` and `pnpm format`.
 
 The core now exposes session, command/context, asynchronous I/O, terminal adapter and cancellation contracts, with a native CLI adapter and test fixtures. See [contract semantics](docs/SHELL_CONTRACTS.md). The [command registry](docs/COMMAND_REGISTRY.md) now provides validated registration, aliases, exact lookup and metadata-derived help. `builtin_registry()` registers the six implemented [core commands](docs/COMMANDS.md). The [single-command parser](docs/SHELL_GRAMMAR.md) provides quoted/escaped words, a minimal AST and typed syntax errors; the interpreter now consumes its AST for registry dispatch.
 
-The web test checks rendered markup in Node, not an actual browser. WASM compilation checks portability only; browser execution and parity tests start when the bridge exists. CI runs the same baseline checks on pull requests and pushes to main.
+The web scaffold test checks rendered markup in Node. The WASM suite executes the generated Rust module in Node and headless Chromium, including all six commands, errors, session isolation/reset and cancellation. CI runs Rust, web and WASM jobs on pull requests and pushes to main. Full native/browser parity auditing remains PR-09.
+
+Before `pnpm check:wasm` or `pnpm check`, install `cargo install wasm-pack --version 0.15.1 --locked` and `pnpm exec playwright install --with-deps chromium`. Use `pnpm build:wasm` to generate the uncommitted web-target package. See [bridge API, tests and limitations](docs/WASM_BRIDGE.md).
 
 ## Project documents
 

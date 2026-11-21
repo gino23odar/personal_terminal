@@ -5,3 +5,7 @@ node_modules
 dist
 docs/PRODUCT_SPEC.md
 docs/IMPLEMENTATION_PLAN.md
+
+/crates/gino-wasm/pkg/
+/playwright-report/
+/test-results/

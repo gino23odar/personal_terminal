@@ -1,8 +1,8 @@
-# Architecture — PR-06
+# Architecture — PR-07
 
 ## Present implementation
 
-The Cargo workspace has two crates. `gino-shell` contains portable session, command/context, I/O/event, terminal adapter and cancellation contracts, plus a command registry, single-command parser and async interpreter with six built-ins. `gino-cli` now owns a Rustyline input loop, local executor, bounded output handoff and native rendering. Rustyline and signal-hook dependencies are native-only; the core remains dependency-free.
+The Cargo workspace has three crates. `gino-shell` contains portable session, command/context, I/O/event, terminal adapter and cancellation contracts, plus a command registry, single-command parser and async interpreter with six built-ins. `gino-cli` now owns a Rustyline input loop, local executor, bounded output handoff and native rendering. Rustyline and signal-hook dependencies are native-only; the core remains dependency-free.
 
 `apps/web` is a React/TypeScript/Vite page, tested with Vitest. It explicitly states that no shell is connected. Vite's built-in TSX transform is sufficient for this scaffold; React Fast Refresh can be added when needed. There is no xterm dependency or simulated terminal input yet.
 
@@ -14,10 +14,10 @@ Solid edges exist today. Dashed edges are planned.
 flowchart TD
   CLI["gino-cli: native presentation"] --> Core["gino-shell: portable Rust"]
   Web["React / xterm: browser presentation"] -. "PR-08" .-> Bridge["gino-wasm: typed JS boundary"]
-  Bridge -. "PR-07" .-> Core
+  Bridge --> Core
 ```
 
-Rust will own parsing, execution, commands, session state and virtual filesystem semantics. Native and browser adapters will invoke the same implementation. TypeScript will own DOM presentation, accessibility and browser integration only. The future optional API is independently deployed and is not on the local shell execution path.
+Rust owns parsing, execution, commands and session state, and will own future virtual filesystem semantics. Native and WASM adapters invoke the same implementation. TypeScript will own DOM presentation, accessibility and browser integration only. The future optional API is independently deployed and is not on the local shell execution path.
 
 ## Portability and WASM build decision
 
@@ -25,17 +25,17 @@ The core must avoid host filesystem, environment, process, terminal and DOM depe
 
 Today `cargo build -p gino-shell --target wasm32-unknown-unknown --locked` checks that the core compiles for WASM. Its output is a Rust library, not a JavaScript-loadable shell. The native executable is deliberately excluded from that target check.
 
-PR-07 will add `gino-wasm` as a `cdylib` using `wasm-bindgen`, with a pinned `wasm-pack` build pipeline targeting `web`. PR-08 will import that generated package into Vite. Generated binaries must remain uncommitted, and CI must build them before browser tests. No nonfunctional bridge crate or build script is included now.
+`gino-wasm` is a `cdylib`/`rlib` using `wasm-bindgen`, built by pinned wasm-pack 0.15.1 with target `web`. It calls the existing registry/interpreter and serializes typed output and session snapshots. PR-08 will import the generated package into Vite. Generated binaries remain uncommitted; CI builds them before real Node and Chromium execution tests. See [bridge API and limits](WASM_BRIDGE.md).
 
 Commands and adapters now return boxed local futures without `Send` or `Sync` requirements. Runtime polling and platform I/O belong to adapters. Per-execution cancellation wakes local futures and can race pending I/O. Tests exercise trait-object composition with `Rc`-backed state; the same tests are compile-checked for WASM, not executed there. I/O traits specify bounded buffering and pending writes; concrete streaming channels and backpressure arrive with PR-16. See [contract semantics](SHELL_CONTRACTS.md) for mutation, error and cancellation rules.
 
 ## Toolchain policy
 
-Rust 1.99.1, Node 24.22.1 and pnpm 11.25.0 are pinned to versions available in the development environment. Direct JavaScript dependencies are exact versions and transitive versions are locked. Commit Cargo.lock and pnpm-lock.yaml; CI uses locked/frozen installation. Updates require re-running the same checks. CI initially validates Linux plus core WASM compilation; macOS and Windows are not claimed as tested.
+Rust 1.99.1, Node 24.22.1 and pnpm 11.25.0 are pinned to versions available in the development environment. Direct JavaScript dependencies are exact versions and transitive versions are locked. Commit Cargo.lock and pnpm-lock.yaml; CI uses locked/frozen installation. Updates require re-running the same checks. CI validates Linux, core WASM compilation and the generated bridge in Node/Chromium; macOS and Windows are not claimed as tested.
 
 ## Deferred work
 
-WASM bridge PR-07; browser terminal PR-08. VFS, portfolio content, animation, AI and deployment remain at their roadmap PRs. No release milestone is achieved by this scaffold.
+Browser terminal PR-08. VFS, portfolio content, animation, AI and deployment remain at their roadmap PRs. No release milestone is achieved by this scaffold.
 
 ## Command registration (PR-03)
 

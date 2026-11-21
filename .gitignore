@@ -6,3 +6,7 @@ coverage/
 .env
 .env.*
 !.env.example
+
+/crates/gino-wasm/pkg/
+/playwright-report/
+/test-results/

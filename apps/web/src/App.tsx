@@ -12,8 +12,8 @@ export function App() {
           This page verifies the browser scaffold. No commands are available.
         </p>
         <p>
-          The Rust core now implements six basic commands. The WebAssembly
-          bridge and browser terminal interface are planned for later PRs.
+          The Rust core and WebAssembly bridge implement six basic commands.
+          Connecting this page to a browser terminal is planned for PR-08.
         </p>
       </section>
     </main>
