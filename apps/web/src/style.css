@@ -4,29 +4,121 @@
   background: #09121e;
   font-synthesis: none;
   line-height: 1.6;
+  color-scheme: dark;
+}
+* {
+  box-sizing: border-box;
 }
 body {
   margin: 0;
 }
 main {
-  max-width: 48rem;
-  margin: 10vh auto;
+  max-width: 64rem;
+  margin: 5vh auto;
   padding: 1.5rem;
 }
 h1 {
   color: #61e5d2;
-  font-size: clamp(2.5rem, 10vw, 4rem);
+  font-size: clamp(1.7rem, 5vw, 2.8rem);
+  line-height: 1.2;
   margin: 0;
-}
-h2 {
-  font-size: 1.2rem;
 }
 .eyebrow {
   color: #61e5d2;
+  letter-spacing: 0.12em;
+  font-size: 0.8rem;
 }
-section {
+.shell {
   border: 1px solid #365065;
-  padding: 1.5rem;
+  background: #0c1725;
+  padding: 1rem;
   margin-top: 2rem;
-  border-radius: 0.5rem;
+  border-radius: 0.6rem;
+  overflow: hidden;
+}
+.shell-bar {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  border-bottom: 1px solid #365065;
+  padding-bottom: 0.6rem;
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+  color: #9db4c9;
+}
+.terminal {
+  height: clamp(16rem, 50vh, 32rem);
+  width: 100%;
+}
+form {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+label {
+  color: #61e5d2;
+  overflow-wrap: anywhere;
+}
+input {
+  min-width: 8rem;
+  flex: 1;
+  color: #edf6fc;
+  background: #09121e;
+  border: 1px solid #365065;
+  border-radius: 0.3rem;
+  padding: 0.6rem;
+  font: inherit;
+}
+button {
+  font: inherit;
+  color: #09121e;
+  background: #61e5d2;
+  border: 0;
+  border-radius: 0.3rem;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+}
+button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+:focus-visible {
+  outline: 2px solid #61e5d2;
+  outline-offset: 3px;
+}
+.hint,
+footer {
+  color: #9db4c9;
+  font-size: 0.8rem;
+}
+footer {
+  margin-top: 1.2rem;
+}
+[role="alert"] {
+  color: #ffd18c;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: pre-wrap;
+}
+@media (max-width: 480px) {
+  main {
+    padding: 0.7rem;
+    margin: 1rem auto;
+  }
+  .shell {
+    padding: 0.7rem;
+  }
+  form label {
+    width: 100%;
+  }
 }

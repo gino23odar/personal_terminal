@@ -23,6 +23,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Install Rust and WASM build tooling
+        run: |
+          rustup show
+          cargo install wasm-pack --version 0.15.1 --locked
       - uses: actions/setup-node@v4
         with:
           node-version-file: .node-version
@@ -30,6 +34,8 @@ jobs:
         run: npm install --global pnpm@11.25.0
       - run: pnpm install --frozen-lockfile
       - run: pnpm check:web
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm test:web:browser
   wasm:
     runs-on: ubuntu-latest
     steps:

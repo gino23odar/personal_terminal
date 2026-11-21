@@ -1,19 +1,19 @@
-# Architecture — PR-07
+# Architecture — PR-08
 
 ## Present implementation
 
 The Cargo workspace has three crates. `gino-shell` contains portable session, command/context, I/O/event, terminal adapter and cancellation contracts, plus a command registry, single-command parser and async interpreter with six built-ins. `gino-cli` now owns a Rustyline input loop, local executor, bounded output handoff and native rendering. Rustyline and signal-hook dependencies are native-only; the core remains dependency-free.
 
-`apps/web` is a React/TypeScript/Vite page, tested with Vitest. It explicitly states that no shell is connected. Vite's built-in TSX transform is sufficient for this scaffold; React Fast Refresh can be added when needed. There is no xterm dependency or simulated terminal input yet.
+`apps/web` uses React, Vite and xterm.js. A labeled HTML input provides browser editing and keyboard shortcuts, while xterm renders sanitized output. The app loads the generated WASM module and sends complete command lines to Rust. Its TypeScript code owns only presentation, input history and lifecycle. See [browser terminal](BROWSER_TERMINAL.md).
 
 ## Intended dependency boundaries
 
-Solid edges exist today. Dashed edges are planned.
+Solid edges exist today.
 
 ```mermaid
 flowchart TD
   CLI["gino-cli: native presentation"] --> Core["gino-shell: portable Rust"]
-  Web["React / xterm: browser presentation"] -. "PR-08" .-> Bridge["gino-wasm: typed JS boundary"]
+  Web["React / xterm: browser presentation"] --> Bridge["gino-wasm: typed JS boundary"]
   Bridge --> Core
 ```
 
@@ -25,7 +25,7 @@ The core must avoid host filesystem, environment, process, terminal and DOM depe
 
 Today `cargo build -p gino-shell --target wasm32-unknown-unknown --locked` checks that the core compiles for WASM. Its output is a Rust library, not a JavaScript-loadable shell. The native executable is deliberately excluded from that target check.
 
-`gino-wasm` is a `cdylib`/`rlib` using `wasm-bindgen`, built by pinned wasm-pack 0.15.1 with target `web`. It calls the existing registry/interpreter and serializes typed output and session snapshots. PR-08 will import the generated package into Vite. Generated binaries remain uncommitted; CI builds them before real Node and Chromium execution tests. See [bridge API and limits](WASM_BRIDGE.md).
+`gino-wasm` is a `cdylib`/`rlib` using `wasm-bindgen`, built by pinned wasm-pack 0.15.1 with target `web`. It calls the existing registry/interpreter and serializes typed output and session snapshots. Vite imports the generated JS and emits an explicit WASM URL asset. Generated binaries remain uncommitted; CI builds them before real Node and Chromium execution tests. See [bridge API and limits](WASM_BRIDGE.md).
 
 Commands and adapters now return boxed local futures without `Send` or `Sync` requirements. Runtime polling and platform I/O belong to adapters. Per-execution cancellation wakes local futures and can race pending I/O. Tests exercise trait-object composition with `Rc`-backed state; the same tests are compile-checked for WASM, not executed there. I/O traits specify bounded buffering and pending writes; concrete streaming channels and backpressure arrive with PR-16. See [contract semantics](SHELL_CONTRACTS.md) for mutation, error and cancellation rules.
 
@@ -35,7 +35,7 @@ Rust 1.99.1, Node 24.22.1 and pnpm 11.25.0 are pinned to versions available in t
 
 ## Deferred work
 
-Browser terminal PR-08. VFS, portfolio content, animation, AI and deployment remain at their roadmap PRs. No release milestone is achieved by this scaffold.
+Parity and V0.1 audit PR-09. VFS, portfolio content, animation, AI and deployment remain at their roadmap PRs. No release milestone is achieved by this scaffold.
 
 ## Command registration (PR-03)
 
