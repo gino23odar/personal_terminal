@@ -10,3 +10,5 @@ coverage/
 /crates/gino-wasm/pkg/
 /playwright-report/
 /test-results/
+
+/tests/parity/generated/
