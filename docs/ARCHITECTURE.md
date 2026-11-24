@@ -1,8 +1,8 @@
-# Architecture — PR-09
+# Architecture — PR-10
 
 ## Present implementation
 
-The Cargo workspace has three crates. `gino-shell` contains portable session, command/context, I/O/event, terminal adapter and cancellation contracts, plus a command registry, single-command parser and async interpreter with six built-ins. `gino-cli` now owns a Rustyline input loop, local executor, bounded output handoff and native rendering. Rustyline and signal-hook dependencies are native-only; the core remains dependency-free.
+The Cargo workspace has four crates. The new `gino-vfs` crate implements dependency-free node-addressed in-memory storage; it is not yet connected to shell sessions or commands. See [VFS contracts](VFS_CONTRACTS.md). `gino-shell` contains portable session, command/context, I/O/event, terminal adapter and cancellation contracts, plus a command registry, single-command parser and async interpreter with six built-ins. `gino-cli` now owns a Rustyline input loop, local executor, bounded output handoff and native rendering. Rustyline and signal-hook dependencies are native-only; the core remains dependency-free.
 
 `apps/web` uses React, Vite and xterm.js. A labeled HTML input provides browser editing and keyboard shortcuts, while xterm renders sanitized output. The app loads the generated WASM module and sends complete command lines to Rust. Its TypeScript code owns only presentation, input history and lifecycle. See [browser terminal](BROWSER_TERMINAL.md).
 
@@ -35,7 +35,7 @@ Rust 1.99.1, Node 24.22.1 and pnpm 11.25.0 are pinned to versions available in t
 
 ## Deferred work
 
-V0.1 acceptance is pending PR-09 review; see [audit evidence](V0_1_AUDIT.md). VFS, portfolio content, animation, AI and deployment remain at their roadmap PRs. No release milestone is achieved by this scaffold.
+PR-09 is accepted and merged; see [audit evidence](V0_1_AUDIT.md). VFS paths/policy, command integration and persistence remain PR-11 through PR-14. Portfolio content, animation, AI and deployment remain at their roadmap PRs. No release tag is published by PR-10.
 
 ## Command registration (PR-03)
 
@@ -56,3 +56,7 @@ Rustyline owns line editing and raw-mode cleanup. The native loop supplies a fre
 ## Runtime parity (PR-09)
 
 A test-only native example and the real WASM module consume one reviewed JSON fixture file. Node compares exact outcomes and generates a fresh native baseline; Chromium compares browser WASM against that baseline and the fixture. CLI PTY and production UI smoke tests consume the same adapter scenario. The JSON dependency is dev-only; no production command or interpreter changes are needed. See [audit and boundaries](V0_1_AUDIT.md).
+
+## VFS storage foundation (PR-10)
+
+`gino-vfs` owns validated entry names, instance-scoped opaque node handles, byte files, directory metadata, an object-safe synchronous backend trait and deterministic in-memory implementation. It imports no shell or adapter code. Tests are its current consumer; path policy will wrap the backend in PR-11 before commands use it in PR-12. Handles use local `Rc` identity to reject foreign instances without global counters or platform APIs. Mutation errors preserve the tree; rename protects the root and rejects cycles/collisions. No host filesystem, timestamps, permissions, quotas or persistence are implied by the model. Native tests and explicit WASM production/test compile checks run in existing Rust CI.

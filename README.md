@@ -2,7 +2,7 @@
 
 Rust-first virtual shell and interactive engineering portfolio, under development.
 
-**Current state: native CLI and browser terminal, with PR-09 cross-runtime parity verification and a V0.1 technical audit.** Use `help`, `echo`, `pwd`, `whoami`, `clear` and `exit` in either runtime. The browser executes locally through WASM; VFS, portfolio data and API remain planned.
+**Current state: native CLI and browser terminal with verified runtime parity; PR-10 adds a portable in-memory VFS library.** Use `help`, `echo`, `pwd`, `whoami`, `clear` and `exit` in either runtime. The browser executes locally through WASM; VFS shell integration, portfolio data and API remain planned. See [VFS contracts](docs/VFS_CONTRACTS.md) for the implemented storage library and its boundaries.
 
 ## Development setup
 
@@ -36,6 +36,8 @@ cargo test --workspace --locked
 cargo build --workspace --locked
 cargo build -p gino-shell --target wasm32-unknown-unknown --locked
 cargo check -p gino-shell --tests --target wasm32-unknown-unknown --locked
+cargo build -p gino-vfs --target wasm32-unknown-unknown --locked
+cargo check -p gino-vfs --tests --target wasm32-unknown-unknown --locked
 pnpm check:web
 pnpm check:wasm
 pnpm test:web:browser

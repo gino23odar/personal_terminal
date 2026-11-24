@@ -1,5 +1,5 @@
 [workspace]
-members = ["crates/gino-shell", "crates/gino-cli", "crates/gino-wasm"]
+members = ["crates/gino-shell", "crates/gino-cli", "crates/gino-wasm", "crates/gino-vfs"]
 resolver = "3"
 
 [workspace.package]
