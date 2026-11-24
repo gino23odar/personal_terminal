@@ -92,6 +92,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "gino-vfs"
+version = "0.0.0"
+
+[[package]]
 name = "gino-wasm"
 version = "0.0.0"
 dependencies = [

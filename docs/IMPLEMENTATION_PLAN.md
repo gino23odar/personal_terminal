@@ -99,9 +99,10 @@ Use a PR template with checkboxes for scoped change, user-visible behavior, test
 - PR-06: accepted and merged as GitHub PR #6; owner reports verification and hosted CI passed.
 - PR-07: accepted and merged as GitHub PR #7; hosted Rust, web and WASM CI passed.
 - PR-08: accepted and merged as GitHub PR #8; owner reports verification and hosted CI passed.
-- PR-09: runtime parity fixtures, adapter smoke coverage and V0.1 audit implemented on feature branch; acceptance pending checks and owner review.
-- PR-10 through PR-36: planned, not implemented.
-- V0.1 technical evidence is documented in V0_1_AUDIT.md; the gate awaits PR-09 acceptance. V0.5 and V1.0 remain future work.
+- PR-09: accepted and merged as GitHub PR #9 with hosted Rust, web and WASM CI passing.
+- PR-10: portable VFS types, in-memory backend, metadata and service contract implemented on feature branch; acceptance pending verification and owner review.
+- PR-11 through PR-36: planned, not implemented.
+- V0.1 technical evidence is documented in V0_1_AUDIT.md; the architectural gate was accepted with PR-09; no release tag is implied. V0.5 and V1.0 remain future work.
 
 PR-02 prerequisites: accept PR-01 with passing baseline checks; install the pinned toolchains and WASM target; read both specification documents and architecture notes. Its scope is portable session, command/context, I/O/events, cancellation and adapter traits, verified natively and for WASM. Registry, parser, commands and runtime integrations remain later work.
 
@@ -120,3 +121,5 @@ PR-08 prerequisites: accept PR-07 after native, web, generated TypeScript and No
 PR-09 prerequisites: accept PR-08 with native, bridge and production browser UI checks passing. Review BROWSER_TERMINAL.md and WASM_BRIDGE.md; introduce cross-runtime parity fixtures, CLI/browser smoke coverage and the V0.1 audit. Do not begin VFS or claim V0.1 until its criteria are evidenced.
 
 PR-10 prerequisites: accept PR-09 with passing native, WASM, parity and production browser checks; review V0_1_AUDIT.md and portable contracts. Introduce VFS types, in-memory backend, metadata and service contracts with native/WASM tests. Path resolution, filesystem commands and persistence remain PR-11 through PR-14.
+
+PR-11 prerequisites: accept PR-10 with native tests and VFS WASM production/test compilation passing; review VFS_CONTRACTS.md. Add virtual path resolution, read-only mounts, permissions/capabilities and quotas with traversal, mount and isolation regressions. Filesystem shell commands and persistence remain PR-12 and PR-13.

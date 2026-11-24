@@ -1,6 +1,6 @@
 # V0.1 technical audit — PR-09
 
-V0.1's scope is architectural proof: an independently runnable native Linux CLI and a browser terminal execute the same basic Rust shell through platform adapters. This audit covers PR-01 through PR-09. PR-09 acceptance remains subject to green checks and owner review/merge; this document does not publish a release or claim V0.5/V1.0.
+V0.1's scope is architectural proof: an independently runnable native Linux CLI and a browser terminal execute the same basic Rust shell through platform adapters. This audit covers PR-01 through PR-09. PR-09 was accepted and merged with [hosted CI passing](https://github.com/gino23odar/personal_terminal/actions/runs/44957638820). This audit records the PR-09 boundary; later work is tracked in the implementation plan. It does not publish a release or claim V0.5/V1.0.
 
 ## Acceptance evidence
 
